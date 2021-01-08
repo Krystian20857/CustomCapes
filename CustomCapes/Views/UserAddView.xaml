@@ -1,0 +1,73 @@
+﻿<Window x:Class="CustomCapes.Views.UserAddView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:CustomCapes.Views"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:cm="http://caliburnmicro.com"
+        xmlns:validator="clr-namespace:CustomCapes.Validator"
+        mc:Ignorable="d"
+        Title="Add User" Height="200" Width="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <DockPanel LastChildFill="False">
+            <TextBox Margin="7" DockPanel.Dock="Top"
+                     Width="280"
+                     materialDesign:HintAssist.Hint="Username"
+                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                     VerticalAlignment="Center">
+                <TextBox.Text>
+                    <Binding Path="UserName"
+                             Mode="TwoWay"
+                             UpdateSourceTrigger="PropertyChanged"
+                             NotifyOnValidationError="True">
+                        <Binding.ValidationRules>
+                            <validator:UserValidator ValidatesOnTargetUpdated="True" />
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <StackPanel Margin="7" DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Stretch">
+                <TextBox Width="160"
+                         materialDesign:HintAssist.Hint="Cape path"
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                         VerticalAlignment="Center">
+                    <TextBox.Text>
+                        <Binding Path="CapePath"
+                                 Mode="TwoWay"
+                                 UpdateSourceTrigger="PropertyChanged"
+                                 NotifyOnValidationError="True">
+                            <Binding.ValidationRules>
+                                <validator:FileValidator ValidatesOnTargetUpdated="True" />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+                <Button Style="{StaticResource MaterialDesignRaisedButton}"
+                        Margin="5"
+                        Width="100"
+                        Content="Browse"
+                        cm:Message.Attach="[CapeBrowseClick]" />
+            </StackPanel>
+        </DockPanel>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Style="{StaticResource MaterialDesignRaisedButton}"
+                    Margin="5"
+                    Width="125"
+                    Content="Cancel"
+                    cm:Message.Attach="[OnCancelClick]" />
+            <Button Style="{StaticResource MaterialDesignRaisedButton}"
+                    Margin="5"
+                    Width="125"
+                    Content="Add User"
+                    cm:Message.Attach="[OnAddClick]" />
+        </StackPanel>
+
+    </Grid>
+</Window>

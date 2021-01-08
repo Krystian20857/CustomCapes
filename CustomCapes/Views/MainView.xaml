@@ -1,0 +1,126 @@
+﻿<Window x:Class="CustomCapes.Views.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:cm="http://caliburnmicro.com"
+        mc:Ignorable="d"
+        Title="Custom Capes" Height="500" Width="300" MinHeight="500" MinWidth="300" MaxHeight="500" MaxWidth="300">
+    <Window.Resources>
+
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!--
+        <GroupBox Grid.Row="0" Header="Server" Style="{StaticResource GroupboxStyle}">
+            <StackPanel>
+                <StackPanel DockPanel.Dock="Top"
+                            Orientation="Horizontal"
+                            Margin="2"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+                    <TextBlock Text="Status: " FontSize="16" FontWeight="Bold" />
+                    <Path Stroke="{Binding StatusColor}" Fill="{Binding StatusColor}">
+                        <Path.Data>
+                            <GeometryGroup FillRule="EvenOdd">
+                                <EllipseGeometry Center="5, 12.5" RadiusX="5" RadiusY="5" />
+                            </GeometryGroup>
+                        </Path.Data>
+                    </Path>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Margin="2"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+                    <Button Width="100"
+                            Margin="5"
+                            Content="Start" 
+                            cm:Message.Attach="[OnStartClicked]"/>
+                    <Button IsEnabled="False"
+                            Width="100"
+                            Margin="5"
+                            Content="Stop" 
+                            cm:Message.Attach="[OnStopClicked]"/>
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
+        -->
+
+        <GroupBox Header="Users" Style="{StaticResource GroupboxStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Border Style="{StaticResource DefaultBorder}">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <ItemsControl HorizontalContentAlignment="Stretch"
+                                      ItemsSource="{Binding Users}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource DefaultBorder}">
+                                        <DockPanel LastChildFill="False" Height="55">
+                                            <Image DockPanel.Dock="Left"
+                                                   Height="45"
+                                                   Width="45"
+                                                   Source="{Binding Image}"
+                                                   Margin="1" />
+                                            <TextBlock DockPanel.Dock="Left"
+                                                       Margin="0, 5, 0, 0"
+                                                       FontSize="12"
+                                                       FontWeight="Bold"
+                                                       Text="{Binding UserName}" />
+                                            <Button Style="{StaticResource MaterialDesignRaisedButton}"
+                                                    Margin="5, 0"
+                                                    DockPanel.Dock="Right"
+                                                    Width="30"
+                                                    Height="30"
+                                                    Padding="0"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    cm:Message.Attach="[OnUserRemoveClick($this)]">
+                                                <materialDesign:PackIcon
+                                                    Kind="Delete"
+                                                    Width="20"
+                                                    Height="20" />
+                                            </Button>
+                                            <Button Style="{StaticResource MaterialDesignRaisedButton}"
+                                                    Margin="5, 0"
+                                                    DockPanel.Dock="Right"
+                                                    Width="30"
+                                                    Height="30"
+                                                    Padding="0"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    cm:Message.Attach="[OnUserEditClick($this)]">
+                                                <materialDesign:PackIcon
+                                                    Kind="Pencil"
+                                                    Width="20"
+                                                    Height="20" />
+                                            </Button>
+                                        </DockPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Border>
+                <StackPanel Grid.Row="1" HorizontalAlignment="Center" Orientation="Horizontal">
+                    <Button Margin="10, 5"
+                            Style="{StaticResource MaterialDesignRaisedButton}"
+                            Width="250"
+                            Content="Add"
+                            cm:Message.Attach="[OnUserAddClick]"/>
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+
+    </Grid>
+</Window>
