@@ -40,9 +40,6 @@ namespace CustomCapes.ViewModels {
 
         public MainViewModel() {
             StatusColor = new SolidColorBrush(Colors.Red);
-            
-            //_httpServer.HostFolder(Paths.DataFolder, "*.png");
-            //_httpServer.Initialize(IPAddress.Loopback, 80);                         //TODO: dynamic port
 
             LoadUsers();
 

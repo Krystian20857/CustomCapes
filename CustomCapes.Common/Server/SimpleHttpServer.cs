@@ -6,7 +6,6 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using CustomCapes.Common.Util;
-using Ignite.SharpNetSH;
 
 namespace CustomCapes.Common.Server {
 
@@ -25,6 +24,7 @@ namespace CustomCapes.Common.Server {
 
         public event EventHandler<HttpListenerContext> ReceivedContextEvent;
         public event EventHandler<Exception> ErrorEvent;
+        public event EventHandler<HttpListenerContext> FileNotFound;
 
         #endregion
 
@@ -134,7 +134,7 @@ namespace CustomCapes.Common.Server {
                     }
 
                     context.Response.StatusCode = (int) HttpStatusCode.OK;
-                    context.Response.OutputStream.Flush();
+                    
                 }
                 catch (Exception exception) {
                     context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
@@ -146,8 +146,10 @@ namespace CustomCapes.Common.Server {
             }
             else {
                 context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                FileNotFound?.Invoke(this, context);
             }
             
+            context.Response.OutputStream.Flush();
             context.Response.OutputStream.Close();
 
         }
@@ -155,19 +157,7 @@ namespace CustomCapes.Common.Server {
         private Exception MakeFileNotFound(string file) {
             return new FileNotFoundException($"Cannot find file for http response: {file}");
         }
-
-        public static void testRun() {
-            IHttpServer httpServer = new SimpleHttpServer();
-            httpServer.HostFolder(@"E:\capes", "*.*");
-            httpServer.Initialize(IPAddress.Loopback, 80);
-            NetHelper.AppendHosts(IPAddress.Loopback, "s.optifine.net");
-            while (Console.ReadKey().Key != ConsoleKey.Escape) {
-                
-            }
-            NetHelper.RemoveFromHosts(IPAddress.Loopback, "s.optifine.net");
-            httpServer.StopServer();
-        }
-
+        
         #endregion
     }
 

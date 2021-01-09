@@ -7,6 +7,7 @@ namespace CustomCapes.Common.Server {
 
         event EventHandler<HttpListenerContext> ReceivedContextEvent;
         event EventHandler<Exception> ErrorEvent;
+        event EventHandler<HttpListenerContext> FileNotFound;
 
         bool IsRunning { get; }
         IPAddress Address { get; }
