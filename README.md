@@ -1,5 +1,10 @@
+[![AppVeyor Page](https://img.shields.io/appveyor/build/Krystian20857/customcapes?style=for-the-badge&logo=appveyor)](https://ci.appveyor.com/project/Krystian20857/customcapes)
+
 # CustomCapes
 Simple software for custom minecraft capes. It allows to create persistent capes profiles for every player.
+
+# Downloads
+Click appveyor badge then go to artifacts and download _CustomCapes.exe_.
 
 ## Features
   * Works locally - require no external server
