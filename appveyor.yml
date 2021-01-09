@@ -1,0 +1,28 @@
+﻿image: Visual Studio 2019
+configuration: Release
+
+version: dev-{build}
+
+init:
+  - ps: Update-AppveyorBuild -Version "0.0.1-dev.$($env:appveyor_repo_commit.substring(0,7))"
+
+assembly_info:
+  patch: true
+  file: SharedAssemblyInfo.cs
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}'
+
+install:
+  - dotnet tool restore
+
+build_script:
+  - dotnet cake build/build.cake
+
+skip_commits:
+  files:
+    - README.md
+    - LICENSE
+
+artifacts:
+  - path: "output/release/CustomCapes.exe"
