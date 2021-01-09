@@ -3,6 +3,9 @@
 # CustomCapes
 Simple software for custom minecraft capes. It allows to create persistent capes profiles for every player.
 
+# Important
+This software is not compatible with mantle.gg. Software will not start when mantle is running. Please uninstall mantle and reboot system before using this software.
+
 # Downloads
 Click appveyor badge then go to artifacts and download _CustomCapes.exe_.
 
