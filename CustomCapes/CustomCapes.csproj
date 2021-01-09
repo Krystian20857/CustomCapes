@@ -98,10 +98,15 @@
     <ItemGroup>
       <PackageReference Include="Cake" Version="1.0.0-rc0002" />
       <PackageReference Include="Caliburn.Micro" Version="4.0.136-rc" />
+      <PackageReference Include="Costura.Fody" Version="5.0.0-alpha0281">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
       <PackageReference PrivateAssets="All" Include="Fody" Version="6.3.0">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+      <PackageReference Include="ILRepack" Version="2.1.0-beta1" />
       <PackageReference Include="MaterialDesignThemes" Version="4.0.0-ci2347" />
       <PackageReference Include="NLog" Version="4.7.6" />
       <PackageReference PrivateAssets="All" Include="PropertyChanged.Fody" Version="3.3.1" />
