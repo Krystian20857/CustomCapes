@@ -38,6 +38,7 @@
         <Reference Include="System.Core" />
         <Reference Include="System.Data" />
         <Reference Include="System.Net.Http" />
+        <Reference Include="System.Windows.Forms" />
         <Reference Include="System.Xml" />
         <Reference Include="WindowsBase" />
     </ItemGroup>
@@ -49,6 +50,8 @@
         <Compile Include="Config\IConfiguration.cs" />
         <Compile Include="Config\Impl\YamlConfiguration.cs" />
         <Compile Include="MinecraftApi\UUIDResponse.cs" />
+        <Compile Include="Native\NativeWindowWrapper.cs" />
+        <Compile Include="Native\User32.cs" />
         <Compile Include="Server\GlobalTypeMappings.cs" />
         <Compile Include="Server\IHttpServer.cs" />
         <Compile Include="Server\SimpleHttpServer.cs" />
