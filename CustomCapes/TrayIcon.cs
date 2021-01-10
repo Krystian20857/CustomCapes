@@ -32,6 +32,8 @@ namespace CustomCapes {
             
             NotifyIcon.Text = "Custom Capes";
             NotifyIcon.Icon = Resources.Icon;
+
+            NotifyIcon.Click += (sender, args) => Bootstrapper.Instance.SetForeground();
             
             NotifyIcon.ContextMenu = new ContextMenu();
             NotifyIcon.ContextMenu.MenuItems.Add(new MenuItem("Open Custom Capes", (sender, args) => Bootstrapper.Instance.SetForeground()));
