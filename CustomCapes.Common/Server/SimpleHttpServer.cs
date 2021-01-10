@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Security.AccessControl;
 using System.Threading;
 using CustomCapes.Common.Util;
 
@@ -99,7 +100,7 @@ namespace CustomCapes.Common.Server {
             listener.Stop();
         }
 
-        private void ProcessContext(HttpListenerContext context) {
+        private async void ProcessContext(HttpListenerContext context) {
 
             var mappings = GlobalTypeMappings.Mappings;
             
@@ -119,22 +120,28 @@ namespace CustomCapes.Common.Server {
             if (File.Exists(filePath)) {
                 var stream = Stream.Null;
                 try {
-                    stream = new FileStream(filePath, FileMode.Open);
+                    stream = new FileStream(filePath
+                        , FileMode.Open
+                        , FileAccess.Read
+                        , FileShare.Read
+                        , 4096
+                        , true);
 
                     context.Response.ContentType = mappings.TryGetValue(Path.GetExtension(filePath), out var value0) ? value0 : "application/content";
                     context.Response.ContentLength64 = stream.Length;
-                    context.Response.AddHeader("Date", DateTime.Now.ToString("R"));
+                    context.Response.AddHeader("Date", DateTime.Now.ToString("r"));
                     context.Response.AddHeader("Last-Modified", File.GetLastWriteTime(filePath).ToString("r"));
 
                     var buffer = new byte[stream.Length];
                     var bytesToWrite = 0;
-
-                    while ((bytesToWrite = stream.Read(buffer, 0, buffer.Length)) > 0) {
-                        context.Response.OutputStream.Write(buffer, 0, bytesToWrite);
+                    
+                    while ((bytesToWrite = await stream.ReadAsync(buffer, 0, buffer.Length)) > 0) {
+                        await context.Response.OutputStream.WriteAsync(buffer, 0, bytesToWrite);
                     }
 
                     context.Response.StatusCode = (int) HttpStatusCode.OK;
-                    
+                    await context.Response.OutputStream.FlushAsync().ContinueWith(result => context.Response.OutputStream.Close());
+
                 }
                 catch (Exception exception) {
                     context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
@@ -148,9 +155,6 @@ namespace CustomCapes.Common.Server {
                 context.Response.StatusCode = (int)HttpStatusCode.NotFound;
                 FileNotFound?.Invoke(this, context);
             }
-            
-            context.Response.OutputStream.Flush();
-            context.Response.OutputStream.Close();
 
         }
 

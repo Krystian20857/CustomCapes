@@ -55,20 +55,25 @@ namespace CustomCapes.Internal.Manager {
             };
              
             _server.FileNotFound += (sender, context) => {
-                context.Response.StatusCode = (int) HttpStatusCode.OK;
-                context.Response.ContentType = "image/png";
-                context.Response.AddHeader("Date", DateTime.Now.ToString("R"));
-                context.Response.AddHeader("Last-Modified", DateTime.Now.ToString("R"));
                 var stream = context.Response.OutputStream;
-                var responseStream = _client.GetStreamAsync($"http://{CapesServerIp}:80{context.Request.Url.AbsolutePath}").Result;
-                var count = 0;
-                do {
-                    var buffer = new byte[1024];
-                    count = responseStream.Read(buffer, 0, buffer.Length);
-                    stream.Write(buffer, 0, count);
-                } while (responseStream.CanRead && count > 0);
-                stream.Close();
-                responseStream.Close();
+                _client.GetStreamAsync($"http://{CapesServerIp}:80{context.Request.Url.AbsolutePath}")
+                    .ContinueWith(result => {
+                        context.Response.StatusCode = (int) HttpStatusCode.OK;
+                        context.Response.ContentType = "image/png";
+                        context.Response.AddHeader("Date", DateTime.Now.ToString("r"));
+                        context.Response.AddHeader("Last-Modified", DateTime.Now.ToString("r"));
+                        var count = 0;
+                        var responseStream = result.Result;
+                        do { 
+                            var buffer = new byte[1024];
+                            count = responseStream.Read(buffer, 0, buffer.Length);
+                            stream.Write(buffer, 0, count);
+                        } while (responseStream.CanRead && count > 0);
+                        stream.Close();
+                        responseStream.Close();
+                        context.Response.OutputStream.Flush();
+                        context.Response.OutputStream.Close();
+                });
             };
         }
 
@@ -77,10 +82,15 @@ namespace CustomCapes.Internal.Manager {
         #region Methods
 
         public void StartServer() {
-            _server.Initialize(IPAddress.Loopback, 80);
-            logger.Info($"Started http server on port: {_server.Port}");
-            NetHelper.AppendHosts(IPAddress.Loopback, CapesServer);
-            logger.Info($"Overriden hosts file.");
+            try {
+                _server.Initialize(IPAddress.Loopback, 80);
+                logger.Info($"Started http server on port: {_server.Port}");
+                NetHelper.AppendHosts(IPAddress.Loopback, CapesServer);
+                logger.Info($"Overriden hosts file.");
+            } catch (Exception exception) {
+                logger.Error("Error while starting http server");
+                logger.Error(exception);
+            }
         }
 
         public void StopServer() {
