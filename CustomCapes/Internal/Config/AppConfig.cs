@@ -17,7 +17,7 @@ namespace CustomCapes.Internal.Config {
         #endregion
 
         #region Constructor
-
+ 
         public AppConfig() {
             
         }
