@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 
 using System.Threading.Tasks;
@@ -22,32 +24,54 @@ namespace CustomCapes.Common.MinecraftApi {
 
         #region Constructor
 
+        public MinecraftApiManager() {
+            ServicePointManager.SecurityProtocol =
+                SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+        }
+        
         #endregion
 
         #region Methods
 
         public async Task<UUIDResponse> GetUUIDAsync(string username) {
-            var response = await _client.GetAsync($"https://api.mojang.com/users/profiles/minecraft/{username}");
-            
-            if (response.IsSuccessStatusCode) {
-                var responseString = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<UUIDResponse>(responseString);
-            }
+            try
+            {
+                var response = await _client.GetAsync($"https://api.mojang.com/users/profiles/minecraft/{username}");
 
-            return new UUIDResponse();
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseString = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<UUIDResponse>(responseString);
+                }
+
+                return new UUIDResponse();
+            } catch (Exception exception) {
+                return new UUIDResponse()
+                {
+                    Name = username,
+                    UUID = Guid.Empty.ToString()
+                };
+            }
         }
 
         public async Task<ImageSource> GetHeadRenderAsync(string uuid){
-            var response = await _client.GetAsync($"https://crafatar.com/renders/head/{uuid}?default=MHF_Steve&overlay");
+            try
+            {
+                var response =
+                    await _client.GetAsync($"https://crafatar.com/renders/head/{uuid}?default=MHF_Steve&overlay");
 
-            var image = new BitmapImage();
-            if (response.IsSuccessStatusCode) {
-                image.BeginInit();
-                image.StreamSource = await response.Content.ReadAsStreamAsync();
-                image.EndInit();
+                var image = new BitmapImage();
+                if (response.IsSuccessStatusCode)
+                {
+                    image.BeginInit();
+                    image.StreamSource = await response.Content.ReadAsStreamAsync();
+                    image.EndInit();
+                }
+
+                return image;
+            } catch (Exception exception) {
+                return null;
             }
-
-            return image;
         }
         
         public void Dispose() {
